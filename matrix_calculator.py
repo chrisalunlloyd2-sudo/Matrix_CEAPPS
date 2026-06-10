@@ -9,9 +9,20 @@ class MatrixCalculator:
     """
     def calculate(self, expression):
         try:
-            # Safe evaluation with a limited global namespace
-            allowed_names = {k: v for k, v in math.__dict__.items() if not k.startswith("__")}
-            result = eval(expression, {"__builtins__": {}}, allowed_names)
+            # Safe evaluation: map math functions to globals
+            safe_dict = {
+                "sqrt": math.sqrt,
+                "pi": math.pi,
+                "sin": math.sin,
+                "cos": math.cos,
+                "tan": math.tan,
+                "log": math.log,
+                "exp": math.exp
+            }
+            # Also allow direct 'math.x' if the user types it
+            safe_dict["math"] = math
+            
+            result = eval(expression, {"__builtins__": {}}, safe_dict)
             return {"status": "success", "result": result}
         except Exception as e:
             return {"status": "error", "message": str(e)}
