@@ -86,6 +86,44 @@ class EvolutionLoop:
         self.generation += 1
         return self.population[0]
 
+    def export_midi(self, filename="evolved_techno.mid"):
+        """
+        Manually constructs a Standard MIDI File (SMF) Type 0 from DNA.
+        Follows the binary MIDI spec: Header (MThd) + Track (MTrk).
+        """
+        # MIDI Header
+        # 'MThd' + length (6) + format (0) + tracks (1) + division (96 ticks/quarter)
+        header = b'MThd\x00\x00\x00\x06\x00\x00\x00\x01\x00\x60'
+        
+        track_data = []
+        # Set tempo (128 BPM)
+        # Delta 0, Meta 0x51 (Tempo), Len 3, 24-bit tempo in microseconds
+        track_data.append(b'\x00\xFF\x51\x03\x07\xA1\x20')
+        
+        ticks_per_step = 48 # 16th notes in a 96-tick division
+        
+        for step, velocity in enumerate(self.dna):
+            if velocity > 0:
+                # Note On: Delta 0, 0x90, Note 36 (Kick), Velocity
+                track_data.append(b'\x00\x90\x24' + bytes([velocity]))
+                # Note Off: Delta 48, 0x80, Note 36, Velocity 0
+                track_data.append(b'\x30\x80\x24\x00')
+            else:
+                # Rest: Meta Event (End of Track marker handles padding)
+                pass
+
+        # End of Track
+        track_data.append(b'\x01\xFF\x2F\x00')
+        
+        combined_track = b"".join(track_data)
+        # Track Header: 'MTrk' + length of track data
+        track_header = b'MTrk' + len(combined_track).to_bytes(4, byteorder='big')
+        
+        with open(filename, 'wb') as f:
+            f.write(header + track_header + combined_track)
+        
+        return os.path.abspath(filename)
+
 if __name__ == "__main__":
     print("🥁 KAI 9000: Genetic Darwin Techno Engine Initializing...")
     loop = EvolutionLoop()
