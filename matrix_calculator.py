@@ -21,7 +21,7 @@ class MatrixCalculator:
             }
             # Also allow direct 'math.x' if the user types it
             safe_dict["math"] = math
-            
+
             result = eval(expression, {"__builtins__": {}}, safe_dict)
             return {"status": "success", "result": result}
         except Exception as e:

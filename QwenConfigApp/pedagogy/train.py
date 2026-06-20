@@ -8,7 +8,7 @@ CHATS_DIR = os.path.expanduser("~/.qwen/projects/-data-data-com-termux-files-hom
 
 def harvest_patterns():
     print("[PEDAGOGY] INITIALIZING SKILL HARVESTING...")
-    
+
     if not os.path.exists(CHATS_DIR):
         print(f"[ERROR] CHATS_DIR NOT FOUND: {CHATS_DIR}")
         return
@@ -20,7 +20,7 @@ def harvest_patterns():
     )[:10]
 
     print(f"[PEDAGOGY] MANIFESTING SKILL-BLOCK FOR {len(sessions)} SESSIONS...")
-    
+
     steps = [
         "STEP 1: Verify substrate rigidness (Check /usr/bin/qwen)",
         "STEP 2: Satisfy security rigidness (Inject DUMMY_KEY)",
@@ -28,7 +28,7 @@ def harvest_patterns():
         "STEP 4: Manifest MLvoca public hook (settings.json)",
         "STEP 5: Validate via 3-reply cycle and file manifestation"
     ]
-    
+
     with open("/data/data/com.termux/files/home/QwenConfigApp/pedagogy/SKILLS.md", "w") as f:
         f.write("# 🧬 Qwen Manifestation Skills\n\n")
         f.write("## CORE REPRODUCTION SEQUENCE\n")
